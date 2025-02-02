@@ -26,6 +26,7 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+    // גכד
 
     // API לחיפוש לפי אימייל
     @GetMapping("/{email}")
