@@ -1,6 +1,7 @@
 package com.medisync.service;
 
 import com.medisync.entity.User;
+import com.medisync.enums.UserType;
 import com.medisync.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,18 +14,19 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // יצירת משתמש חדש
-    public User createUser(User user) {
+    public User create(User user) {
+//        if (userCreated.getRole().equals(UserType.DOCTOR)){
+//            doctorService.create();
+//        }
         return userRepository.save(user);
+
     }
 
-    // שליפת כל המשתמשים
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // חיפוש משתמש לפי אימייל
-    public Optional<User> getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }
