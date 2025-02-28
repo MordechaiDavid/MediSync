@@ -22,10 +22,10 @@ MediSync is designed to scale efficiently as the number of users, appointments, 
 
 ## Technologies
 
-- **Java 17** (or your chosen version)
+- **Java 17** 
 - **Spring Boot**: For building the backend API
 - **Spring Data JPA**: For data persistence and managing the database
-- **MySQL** (or another preferred database)
+- **MySQL** 
 - **Spring Security**: For authentication and authorization
 - **Swagger/OpenAPI**: For API documentation
 - **JUnit**: For unit and integration tests
@@ -35,12 +35,12 @@ MediSync is designed to scale efficiently as the number of users, appointments, 
 ### Prerequisites
 
 - Java 17 or higher
-- Maven or Gradle (depending on project setup)
-- MySQL (or preferred database) running locally or on a remote server
+- Maven 
+- MySQL running locally
 
 ### Steps
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/medisync.git
+   git clone https://github.com/mordechaiDavid/medisync.git
    cd medisync
