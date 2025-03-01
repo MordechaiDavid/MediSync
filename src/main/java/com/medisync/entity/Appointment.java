@@ -34,7 +34,7 @@ public class Appointment {
     private AppointmentStatus status;
 
     public static Appointment fromAppointmentDto(AppointmentDto dto){
-        Appointment appointment = new Appointment(dto.getId(), dto.getPatientId(),
+        Appointment appointment = new Appointment(null, dto.getPatientId(),
                 dto.getDoctorId(), dto.getAppointmentDate(),
                 dto.getStatus());
 

@@ -1,6 +1,8 @@
 package com.medisync.entity;
 
 import com.medisync.dto.PatientDto;
+import com.medisync.enums.BloodType;
+import com.medisync.enums.MedicalSpecialization;
 import jakarta.persistence.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,14 +20,18 @@ import java.util.List;
 @Table(name = "patients")
 public class Patient {
     @Id
-    private Long userID;
+    private Long userId;
+    @Enumerated(EnumType.STRING)
+    private BloodType bloodType;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "date_of_birth", nullable = false)
-    private Date dateOfBirth;
+    public Patient(Long userId) {
+        this.userId = userId;
+    }
 
     public static Patient fromPatientDto(PatientDto dto){
-        return new Patient(dto.getUserID(), dto.getDateOfBirth());
+        Patient patient = new Patient();
+        patient.setBloodType(dto.getBloodType());
+        return patient;
     }
 }
 

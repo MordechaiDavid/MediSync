@@ -5,6 +5,9 @@ import com.medisync.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -23,6 +26,9 @@ public class User {
     @Column(name = "id_number", nullable = false, unique = true)
     private String idNumber;
 
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -32,9 +38,9 @@ public class User {
 
 
     public static User fromUserDto(UserDto dto){
-        User user = new User(dto.getId(),
+        User user = new User(null,
                 dto.getName(),
-                dto.getIdNumber(), dto.getEmail()
+                dto.getIdNumber(), dto.getDateOfBirth(),dto.getEmail()
                 , dto.getPassword(), dto.getRole());
 
         return user;

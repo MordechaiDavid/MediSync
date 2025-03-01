@@ -16,11 +16,5 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-
-    @PostMapping
-    public PatientDto createPatient(@RequestBody PatientDto dto) {
-        Patient patientCreated = patientService.create(Patient.fromPatientDto(dto));
-        return PatientDto.fromPatient(patientCreated);
-    }
 }
 

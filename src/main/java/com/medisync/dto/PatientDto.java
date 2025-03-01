@@ -1,6 +1,7 @@
 package com.medisync.dto;
 
 import com.medisync.entity.Patient;
+import com.medisync.enums.BloodType;
 import jakarta.persistence.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,12 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatientDto {
-
-    private Long userID;
-    private Date dateOfBirth;
+    private Long userId;
+    private BloodType bloodType;
 
     public static PatientDto fromPatient(Patient patient){
-        PatientDto dto = new PatientDto(patient.getUserID(), patient.getDateOfBirth());
+        PatientDto dto = new PatientDto(patient.getUserId(), patient.getBloodType());
         return dto;
     }
 }
