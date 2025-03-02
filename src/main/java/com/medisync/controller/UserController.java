@@ -44,5 +44,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/get-user-by-id-number")
+    public ResponseEntity<UserDto> getUserByIdNumber(@RequestParam String idNumber) {
+        User user = userService.getUserByIdNumber(idNumber);
+        if (user != null){
+            return ResponseEntity.ok(UserDto.fromUser(user));
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 

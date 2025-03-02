@@ -76,5 +76,22 @@ public class UserService {
         }
         return user;
     }
+
+    public User getUserByIdNumber(String idNumber) {
+        logger.info("Attempting to fetch user with ID number: {}", idNumber);
+        User user = null;
+        try {
+            user = userRepository.findByIdNumber(idNumber);
+            if (user != null){
+                logger.info("Successfully fetched user for ID number: {}", idNumber);
+            }else {
+                logger.warn("Failed to fetch user with ID number: {}", idNumber);
+            }
+        }catch (Exception e){
+            logger.error("Error while attempting to fetch user with ID number: {}. Details: {}", idNumber, e.getMessage());
+            throw new RuntimeException("Failed to fetch user by ID number", e);
+        }
+        return user;
+    }
 }
 
