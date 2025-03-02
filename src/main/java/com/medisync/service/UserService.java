@@ -8,6 +8,7 @@ import com.medisync.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -48,11 +49,32 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        logger.info("Attempting to fetch all users");
+        List<User> users = null;
+        try {
+            users = userRepository.findAll();
+            logger.info("Successfully fetched {} users", users.size());
+        }catch (Exception e){
+            logger.error("Failed to fetch users: {}", e.getMessage());
+        }
+        return users;
     }
 
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        logger.info("Attempting to fetch user with email: {}", email);
+        User user = null;
+        try {
+            user = userRepository.findByEmail(email);
+            if (user != null){
+                logger.info("Successfully fetched user for email: {}", email);
+            }else {
+                logger.warn("Failed to fetch user with email: {}", email);
+            }
+        }catch (Exception e){
+            logger.error("Error while attempting to fetch user with email: {}. Details: {}", email, e.getMessage());
+            throw new RuntimeException("Failed to fetch user by email", e);
+        }
+        return user;
     }
 }
 

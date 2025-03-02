@@ -4,8 +4,11 @@ import com.medisync.dto.UserDto;
 import com.medisync.entity.User;
 import com.medisync.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +26,23 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        if (users != null){
+            return ResponseEntity.ok(users);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
     }
 
     @GetMapping("/get-user-by-email")
-    public User getUserByEmail(@RequestParam String email) {
-        return userService.getUserByEmail(email);
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
+        User user = userService.getUserByEmail(email);
+        if (user != null){
+            return ResponseEntity.ok(UserDto.fromUser(user));
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 
