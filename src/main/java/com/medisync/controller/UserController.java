@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,10 +32,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        if (users != null){
-            return ResponseEntity.ok(users);
+        if (!users.isEmpty()){
+            List<UserDto> dtos = new ArrayList<>();
+            for (int i = 0; i < users.size(); i++) {
+                dtos.add(i, UserDto.fromUser(users.get(i)));
+            }
+            return ResponseEntity.ok(dtos);
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
