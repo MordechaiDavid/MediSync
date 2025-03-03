@@ -21,13 +21,22 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
+    public ResponseEntity<ApiResponse<UserDto>> createUser(@RequestBody UserDto dto) {
         try {
             User userCreated = userService.create(User.fromUserDto(dto));
-            return ResponseEntity.ok(UserDto.fromUser(userCreated));
-
+            ApiResponse<UserDto> response = new ApiResponse<>(
+                    200,
+                    "successfully created user",
+                    UserDto.fromUser(userCreated)
+            );
+            return ResponseEntity.ok(response);
         }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            ApiResponse<UserDto> response = new ApiResponse<>(
+                    400,
+                    "user not created",
+                    e.getMessage()
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
