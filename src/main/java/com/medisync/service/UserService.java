@@ -4,13 +4,12 @@ import com.medisync.entity.Doctor;
 import com.medisync.entity.Patient;
 import com.medisync.entity.User;
 import com.medisync.enums.UserType;
+import com.medisync.exception.UserNotFoundException;
 import com.medisync.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +55,7 @@ public class UserService {
             logger.info("Successfully fetched {} users", users.size());
         }catch (Exception e){
             logger.error("Failed to fetch users: {}", e.getMessage());
+            throw new RuntimeException("Failed to fetch users");
         }
         return users;
     }
@@ -86,6 +86,7 @@ public class UserService {
                 logger.info("Successfully fetched user for ID number: {}", idNumber);
             }else {
                 logger.warn("Failed to fetch user with ID number: {}", idNumber);
+                throw new UserNotFoundException("User not found with ID number: " + idNumber);
             }
         }catch (Exception e){
             logger.error("Error while attempting to fetch user with ID number: {}. Details: {}", idNumber, e.getMessage());
