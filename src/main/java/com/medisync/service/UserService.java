@@ -69,6 +69,7 @@ public class UserService {
                 logger.info("Successfully fetched user for email: {}", email);
             }else {
                 logger.warn("Failed to fetch user with email: {}", email);
+                throw new UserNotFoundException("User not found with email: " + email);
             }
         }catch (Exception e){
             logger.error("Error while attempting to fetch user with email: {}. Details: {}", email, e.getMessage());
