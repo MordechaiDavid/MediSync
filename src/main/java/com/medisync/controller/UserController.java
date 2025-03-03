@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +19,14 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public UserDto createUser(@RequestBody UserDto dto) {
-        User userCreated = userService.create(User.fromUserDto(dto));
-        return UserDto.fromUser(userCreated);
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
+        try {
+            User userCreated = userService.create(User.fromUserDto(dto));
+            return ResponseEntity.ok(UserDto.fromUser(userCreated));
+
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @GetMapping
