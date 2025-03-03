@@ -71,6 +71,8 @@ public class UserService {
                 logger.warn("Failed to fetch user with email: {}", email);
                 throw new UserNotFoundException("User not found with email: " + email);
             }
+        }catch (UserNotFoundException e){
+            throw e;
         }catch (Exception e){
             logger.error("Error while attempting to fetch user with email: {}. Details: {}", email, e.getMessage());
             throw new RuntimeException("Failed to fetch user by email", e);
@@ -80,20 +82,21 @@ public class UserService {
 
     public User getUserByIdNumber(String idNumber) {
         logger.info("Attempting to fetch user with ID number: {}", idNumber);
-        User user = null;
         try {
-            user = userRepository.findByIdNumber(idNumber);
+            User user = userRepository.findByIdNumber(idNumber);
             if (user != null){
                 logger.info("Successfully fetched user for ID number: {}", idNumber);
+                return user;
             }else {
                 logger.warn("Failed to fetch user with ID number: {}", idNumber);
                 throw new UserNotFoundException("User not found with ID number: " + idNumber);
             }
+        }catch (UserNotFoundException e){
+            throw e;
         }catch (Exception e){
             logger.error("Error while attempting to fetch user with ID number: {}. Details: {}", idNumber, e.getMessage());
             throw new RuntimeException("Failed to fetch user by ID number", e);
         }
-        return user;
     }
 }
 

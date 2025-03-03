@@ -50,7 +50,7 @@ public class UserController {
             }
             ApiResponse<List<UserDto>> response = new ApiResponse<>(
                     200,
-                    "getting all users",
+                    "successfully getting all users",
                     dtos
             );
             return ResponseEntity.ok(response);
@@ -105,7 +105,7 @@ public class UserController {
             ApiResponse<UserDto> response = new ApiResponse<>(
                     404,
                     "User not found with ID number: " + idNumber,
-                    null
+                    e.getMessage()
             );
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }catch (RuntimeException e){
