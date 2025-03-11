@@ -2,16 +2,14 @@ package com.medisync.controller;
 
 import com.medisync.dto.UserDto;
 import com.medisync.entity.User;
-import com.medisync.exception.UserNotFoundException;
-import com.medisync.response.ApiResponse;
 import com.medisync.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,103 +18,58 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ApiResponse<UserDto>> createUser(@RequestBody UserDto dto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
         try {
             User userCreated = userService.create(User.fromUserDto(dto));
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    200,
-                    "successfully created user",
-                    UserDto.fromUser(userCreated)
-            );
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(UserDto.fromUser(userCreated));
         }catch(Exception e){
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    400,
-                    "user not created",
-                    e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String email, String password){
+        boolean isAuthenticated = userService.authenticate(email, password);
+        if (isAuthenticated)
+            return ResponseEntity.ok("Login successful");
+        else {
+            return ResponseEntity.internalServerError().body("Invalid credentials");
         }
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UserDto>>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         try {
             List<UserDto> dtos = new ArrayList<>();
             for (int i = 0; i < users.size(); i++) {
                 dtos.add(i, UserDto.fromUser(users.get(i)));
             }
-            ApiResponse<List<UserDto>> response = new ApiResponse<>(
-                    200,
-                    "successfully getting all users",
-                    dtos
-            );
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(dtos);
         }catch (RuntimeException e){
-            ApiResponse<List<UserDto>> response = new ApiResponse<>(
-                    500,
-                    "Internal server error while fetching users",
-                    e.getMessage()
-            );
-            return ResponseEntity.internalServerError().body(response);
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/get-user-by-email")
-    public ResponseEntity<ApiResponse<UserDto>> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
         try {
-            User user = userService.getUserByEmail(email);
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    200,
-                    "User found successfully",
-                    UserDto.fromUser(user)
-            );
-            return ResponseEntity.ok(response);
-        }catch (UserNotFoundException e){
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    404,
-                    "User not found with ID number: " + email,
-                    null
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            Optional<User> user = userService.getUserByEmail(email);
+            return user.isPresent() ? ResponseEntity.ok(UserDto.fromUser(user.get())) : null;
         }catch (RuntimeException e){
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    500,
-                    "Internal server error while fetching user",
-                    e.getMessage()
-            );
-            return ResponseEntity.internalServerError().body(response);
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     @GetMapping("/get-user-by-id-number")
-    public ResponseEntity<ApiResponse<UserDto>> getUserByIdNumber(@RequestParam String idNumber) {
+    public ResponseEntity<UserDto> getUserByIdNumber(@RequestParam String idNumber) {
         try {
-            User user = userService.getUserByIdNumber(idNumber);
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    200,
-                    "User found successfully",
-                    UserDto.fromUser(user)
-            );
-            return ResponseEntity.ok(response);
-        }catch (UserNotFoundException e){
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    404,
-                    "User not found with ID number: " + idNumber,
-                    e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            Optional<User> user = userService.getUserByIdNumber(idNumber);
+            return user.isPresent() ? ResponseEntity.ok(UserDto.fromUser(user.get())) : null;
         }catch (RuntimeException e){
-            ApiResponse<UserDto> response = new ApiResponse<>(
-                    500,
-                    "Internal server error while fetching user",
-                    e.getMessage()
-            );
-            return ResponseEntity.internalServerError().body(response);
+            return ResponseEntity.internalServerError().body(null);
         }
-
     }
 }
 

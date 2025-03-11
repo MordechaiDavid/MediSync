@@ -7,16 +7,20 @@ import com.medisync.enums.UserType;
 import com.medisync.exception.UserNotFoundException;
 import com.medisync.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -29,22 +33,27 @@ public class UserService {
         logger.info("Starting user creation process for ID number: {}", user.getIdNumber());
         User newUser =  null;
         try {
+            user.setPassword(encoder.encode(user.getPassword()));
             newUser = userRepository.save(user);
-            logger.info("User created successfully with ID: {}", newUser.getIdNumber());
             if (user.getRole().equals(UserType.DOCTOR)){
-                logger.info("Creating Doctor entity for user ID: {}", newUser.getId());
                 doctorService.create(new Doctor(newUser.getId()));
-                logger.info("Doctor entity created successfully for user ID: {}", newUser.getId());
             } else if (user.getRole().equals(UserType.PATIENT)) {
-                logger.info("Creating Patient entity for user ID: {}", newUser.getId());
                 patientService.create(new Patient(newUser.getId()));
-                logger.info("Patient entity created successfully for user ID: {}", newUser.getId());
             }
         }catch (Exception e){
             logger.error("Error during user creation for ID number: {}. Details: {}", user.getIdNumber(), e.getMessage());
             throw new RuntimeException("Failed to create user: " + e.getMessage(), e);
         }
+        logger.info("User created successfully with ID: {}", newUser.getIdNumber());
         return newUser;
+    }
+
+    public boolean authenticate(String email, String password){
+        User user = userRepository.findByEmail(email);
+        if (user == null)
+            return false;
+        logger.info("Successfully login for username: {}", email);
+        return encoder.matches(password, user.getPassword());
     }
 
     public List<User> getAllUsers() {
@@ -60,43 +69,30 @@ public class UserService {
         return users;
     }
 
-    public User getUserByEmail(String email) {
-        logger.info("Attempting to fetch user with email: {}", email);
-        User user = null;
+    public Optional<User> getUserByEmail(String email) {
+        Optional<User> optionalUser;
         try {
-            user = userRepository.findByEmail(email);
-            if (user != null){
-                logger.info("Successfully fetched user for email: {}", email);
-            }else {
-                logger.warn("Failed to fetch user with email: {}", email);
-                throw new UserNotFoundException("User not found with email: " + email);
-            }
-        }catch (UserNotFoundException e){
-            throw e;
+            User user = userRepository.findByEmail(email);
+            optionalUser = Optional.ofNullable(user);
         }catch (Exception e){
-            logger.error("Error while attempting to fetch user with email: {}. Details: {}", email, e.getMessage());
+            logger.error("Error while attempting to fetch user with email: {}", email);
             throw new RuntimeException("Failed to fetch user by email", e);
         }
-        return user;
+        logger.info("success fetch user by email: {}", email);
+        return optionalUser;
     }
 
-    public User getUserByIdNumber(String idNumber) {
-        logger.info("Attempting to fetch user with ID number: {}", idNumber);
+    public Optional<User> getUserByIdNumber(String idNumber) {
+        Optional<User> optionalUser;
         try {
             User user = userRepository.findByIdNumber(idNumber);
-            if (user != null){
-                logger.info("Successfully fetched user for ID number: {}", idNumber);
-                return user;
-            }else {
-                logger.warn("Failed to fetch user with ID number: {}", idNumber);
-                throw new UserNotFoundException("User not found with ID number: " + idNumber);
-            }
-        }catch (UserNotFoundException e){
-            throw e;
+            optionalUser = Optional.ofNullable(user);
         }catch (Exception e){
-            logger.error("Error while attempting to fetch user with ID number: {}. Details: {}", idNumber, e.getMessage());
+            logger.error("Error while attempting to fetch user with ID number: {}", idNumber);
             throw new RuntimeException("Failed to fetch user by ID number", e);
         }
+        logger.info("success fetch user by idNumber: {}", idNumber);
+        return optionalUser;
     }
 }
 
