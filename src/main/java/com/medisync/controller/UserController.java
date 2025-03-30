@@ -3,6 +3,7 @@ package com.medisync.controller;
 import com.medisync.dto.UserDto;
 import com.medisync.entity.User;
 import com.medisync.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UserController {
     private UserService userService;
 
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping("/register")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
         try {
             User userCreated = userService.create(User.fromUserDto(dto));
@@ -30,16 +31,20 @@ public class UserController {
     }
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, String password){
-        boolean isAuthenticated = userService.authenticate(email, password);
-        if (isAuthenticated)
-            return ResponseEntity.ok("Login successful");
+        String token = userService.authenticateAndGenerateToken(email, password);
+        if (token != null)
+            return ResponseEntity.ok(token);
         else {
-            return ResponseEntity.internalServerError().body("Invalid credentials");
+            return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers(HttpServletRequest request) {
+        String emailFromToken = (String) request.getAttribute("email");
+        if (emailFromToken == null){
+            return ResponseEntity.status(401).build();
+        }
         List<User> users = userService.getAllUsers();
         try {
             List<UserDto> dtos = new ArrayList<>();
@@ -53,7 +58,14 @@ public class UserController {
     }
 
     @GetMapping("/get-user-by-email")
-    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email, HttpServletRequest request) {
+        String emailFromToken = (String) request.getAttribute("email");
+        if (emailFromToken == null ){
+            return ResponseEntity.status(401).build();
+        }
+        if (!email.equals(emailFromToken)){
+            return ResponseEntity.status(403).build();
+        }
         try {
             Optional<User> user = userService.getUserByEmail(email);
             return user.isPresent() ? ResponseEntity.ok(UserDto.fromUser(user.get())) : null;
@@ -63,10 +75,20 @@ public class UserController {
     }
 
     @GetMapping("/get-user-by-id-number")
-    public ResponseEntity<UserDto> getUserByIdNumber(@RequestParam String idNumber) {
+    public ResponseEntity<UserDto> getUserByIdNumber(@RequestParam String idNumber, HttpServletRequest request) {
+        String emailFromToken = (String) request.getAttribute("email");
+        if (emailFromToken == null){
+            return ResponseEntity.status(401).build();
+        }
         try {
             Optional<User> user = userService.getUserByIdNumber(idNumber);
-            return user.isPresent() ? ResponseEntity.ok(UserDto.fromUser(user.get())) : null;
+            if (user.isPresent()){
+                if (!user.get().getEmail().equals(emailFromToken)){
+                    return ResponseEntity.status(403).build();
+                }
+                return ResponseEntity.ok(UserDto.fromUser(user.get()));
+            }
+            return ResponseEntity.notFound().build();
         }catch (RuntimeException e){
             return ResponseEntity.internalServerError().body(null);
         }

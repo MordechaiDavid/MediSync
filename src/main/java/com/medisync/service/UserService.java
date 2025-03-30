@@ -4,10 +4,9 @@ import com.medisync.entity.Doctor;
 import com.medisync.entity.Patient;
 import com.medisync.entity.User;
 import com.medisync.enums.UserType;
-import com.medisync.exception.UserNotFoundException;
 import com.medisync.repository.UserRepository;
+import com.medisync.util.JwtUtil;
 import jakarta.transaction.Transactional;
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,12 +47,14 @@ public class UserService {
         return newUser;
     }
 
-    public boolean authenticate(String email, String password){
+    public String authenticateAndGenerateToken(String email, String password){
         User user = userRepository.findByEmail(email);
-        if (user == null)
-            return false;
-        logger.info("Successfully login for username: {}", email);
-        return encoder.matches(password, user.getPassword());
+        if (user != null && encoder.matches(password, user.getPassword())){
+            logger.info("Successfully login for username: {}", email);
+            return JwtUtil.generateToken(email);
+        }
+        logger.info("faild to login for email: {}", email);
+        return null;
     }
 
     public List<User> getAllUsers() {
