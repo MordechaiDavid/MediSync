@@ -21,11 +21,11 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "patient_id", nullable = false)
-    private Long patientId;
+    @Column(name = "patient_user_id", nullable = false)
+    private Long patientUserId;
 
-    @Column(name = "doctor_id", nullable = false)
-    private Long doctorId;
+    @Column(name = "doctor_user_id", nullable = false)
+    private Long doctorUserId;
 
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
@@ -34,8 +34,8 @@ public class Appointment {
     private AppointmentStatus status;
 
     public static Appointment fromAppointmentDto(AppointmentDto dto){
-        Appointment appointment = new Appointment(null, dto.getPatientId(),
-                dto.getDoctorId(), dto.getAppointmentDate(),
+        Appointment appointment = new Appointment(null, dto.getPatientUserId(),
+                dto.getDoctorUserId(), dto.getAppointmentDate(),
                 dto.getStatus());
 
         return appointment;

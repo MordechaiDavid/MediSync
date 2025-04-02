@@ -74,14 +74,14 @@ public class UserController {
         }
     }
 
-    @GetMapping("/get-user-by-id-number")
-    public ResponseEntity<UserDto> getUserByIdNumber(@RequestParam String idNumber, HttpServletRequest request) {
+    @GetMapping("/get-user-by-identity-number")
+    public ResponseEntity<UserDto> getUserByIdentityNumber(@RequestParam String identityNumber, HttpServletRequest request) {
         String emailFromToken = (String) request.getAttribute("email");
         if (emailFromToken == null){
             return ResponseEntity.status(401).build();
         }
         try {
-            Optional<User> user = userService.getUserByIdNumber(idNumber);
+            Optional<User> user = userService.getUserByIdentityNumber(identityNumber);
             if (user.isPresent()){
                 if (!user.get().getEmail().equals(emailFromToken)){
                     return ResponseEntity.status(403).build();

@@ -23,8 +23,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "id_number", nullable = false, unique = true)
-    private String idNumber;
+    @Column(name = "identity_number", nullable = false, unique = true)
+    private String identityNumber;
 
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
@@ -40,7 +40,7 @@ public class User {
     public static User fromUserDto(UserDto dto){
         User user = new User(null,
                 dto.getName(),
-                dto.getIdNumber(), dto.getDateOfBirth(),dto.getEmail()
+                dto.getIdentityNumber(), dto.getDateOfBirth(),dto.getEmail()
                 , dto.getPassword(), dto.getRole());
 
         return user;

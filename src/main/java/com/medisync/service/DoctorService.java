@@ -15,4 +15,8 @@ public class DoctorService {
         return doctorRepository.save(doctor);
     }
 
+    public boolean existByUserId(Long userId){
+        return doctorRepository.existsById(userId);
+    }
+
 }

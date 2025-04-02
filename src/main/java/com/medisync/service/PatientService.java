@@ -15,5 +15,9 @@ public class PatientService {
     public Patient create(Patient patient) {
         return patientRepository.save(patient);
     }
+
+    public boolean existByUserId(Long userId){
+        return patientRepository.existsById(userId);
+    }
 }
 

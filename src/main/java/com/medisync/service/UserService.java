@@ -29,7 +29,6 @@ public class UserService {
 
     @Transactional
     public User create(User user) {
-        logger.info("Starting user creation process for ID number: {}", user.getIdNumber());
         User newUser =  null;
         try {
             user.setPassword(encoder.encode(user.getPassword()));
@@ -40,10 +39,10 @@ public class UserService {
                 patientService.create(new Patient(newUser.getId()));
             }
         }catch (Exception e){
-            logger.error("Error during user creation for ID number: {}. Details: {}", user.getIdNumber(), e.getMessage());
+            logger.error("Error during user creation for ID number: {}. Details: {}", user.getIdentityNumber(), e.getMessage());
             throw new RuntimeException("Failed to create user: " + e.getMessage(), e);
         }
-        logger.info("User created successfully with ID: {}", newUser.getIdNumber());
+        logger.info("User created successfully with ID: {}", newUser.getIdentityNumber());
         return newUser;
     }
 
@@ -83,16 +82,16 @@ public class UserService {
         return optionalUser;
     }
 
-    public Optional<User> getUserByIdNumber(String idNumber) {
+    public Optional<User> getUserByIdentityNumber(String identityNumber) {
         Optional<User> optionalUser;
         try {
-            User user = userRepository.findByIdNumber(idNumber);
+            User user = userRepository.findByIdentityNumber(identityNumber);
             optionalUser = Optional.ofNullable(user);
         }catch (Exception e){
-            logger.error("Error while attempting to fetch user with ID number: {}", idNumber);
+            logger.error("Error while attempting to fetch user with ID number: {}", identityNumber);
             throw new RuntimeException("Failed to fetch user by ID number", e);
         }
-        logger.info("success fetch user by idNumber: {}", idNumber);
+        logger.info("success fetch user by idNumber: {}", identityNumber);
         return optionalUser;
     }
 }

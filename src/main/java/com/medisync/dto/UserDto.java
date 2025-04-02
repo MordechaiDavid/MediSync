@@ -17,7 +17,7 @@ import java.util.Date;
 @Builder
 public class UserDto implements Serializable {
     private String name;
-    private String idNumber;
+    private String identityNumber;
     private LocalDate dateOfBirth;
     private String email;
     private String password;
@@ -25,7 +25,7 @@ public class UserDto implements Serializable {
 
     public static UserDto fromUser(User user){
         UserDto dto = new UserDto(user.getName(),
-                user.getIdNumber(), user.getDateOfBirth(),user.getEmail(), user.getPassword(), user.getRole());
+                user.getIdentityNumber(), user.getDateOfBirth(),user.getEmail(), user.getPassword(), user.getRole());
         return dto;
     }
 }

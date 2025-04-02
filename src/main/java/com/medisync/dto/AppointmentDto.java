@@ -15,14 +15,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppointmentDto {
-    private Long patientId;
-    private Long doctorId;
+    private Long patientUserId;
+    private Long doctorUserId;
     private LocalDateTime appointmentDate;
     private AppointmentStatus status;
 
     public static AppointmentDto fromAppointment(Appointment appointment) {
         AppointmentDto dto = new AppointmentDto(
-                appointment.getPatientId(), appointment.getDoctorId(),
+                appointment.getPatientUserId(), appointment.getDoctorUserId(),
                 appointment.getAppointmentDate(),
                 appointment.getStatus());
         return dto;
