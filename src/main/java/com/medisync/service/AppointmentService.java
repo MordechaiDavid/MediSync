@@ -9,13 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AppointmentService {
-
     @Autowired
     private AppointmentRepository appointmentRepository;
     @Autowired
@@ -23,8 +21,6 @@ public class AppointmentService {
     @Autowired
     private DoctorService doctorService;
     private static final Logger logger = LoggerFactory.getLogger(AppointmentService.class);
-
-
 
     public Appointment create(Appointment appointment) {
         Appointment appointmentCreated = null;
@@ -37,16 +33,8 @@ public class AppointmentService {
     }
 
     public List<Appointment> getAllAppointments() {
-        List<Appointment> appointments = null;
-        try {
-            appointments = appointmentRepository.findAll();
-            logger.info("Successfully fetched {} appointments", appointments.size());
-        }catch (Exception e){
-            logger.error("Failed to fetch  all appointments");
-        }
-        return appointments;
+        return appointmentRepository.findAll();
     }
-
 
     public List<Appointment> getAppointmentsByPatientUserId(Long userId){
         return appointmentRepository.findByPatientUserId(userId);
