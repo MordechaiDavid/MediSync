@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Service
 public class PatientService {
-
     @Autowired
     private PatientRepository patientRepository;
 
@@ -16,8 +15,5 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
-    public boolean existByUserId(Long userId){
-        return patientRepository.existsById(userId);
-    }
 }
 

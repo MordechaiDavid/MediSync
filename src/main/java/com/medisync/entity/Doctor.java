@@ -1,6 +1,6 @@
 package com.medisync.entity;
 
-import com.medisync.dto.DoctorDto;
+import com.medisync.dto.response.DoctorDto;
 import com.medisync.enums.MedicalSpecialization;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,11 +10,13 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "doctors")
 public class Doctor {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long userId;
-
     @Enumerated(EnumType.STRING)
     private MedicalSpecialization specialization;
 
@@ -22,10 +24,6 @@ public class Doctor {
         this.userId = userId;
     }
 
-    public static Doctor fromDoctorDto(DoctorDto dto){
-        Doctor doctor = new Doctor();
-        doctor.setSpecialization(dto.getSpecialization());
-        return doctor;
-    }
+
 
 }

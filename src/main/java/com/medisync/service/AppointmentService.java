@@ -16,30 +16,12 @@ import java.util.Optional;
 public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
-    @Autowired
-    private PatientService patientService;
-    @Autowired
-    private DoctorService doctorService;
-    private static final Logger logger = LoggerFactory.getLogger(AppointmentService.class);
-
     public Appointment create(Appointment appointment) {
-        Appointment appointmentCreated = null;
-        if (patientService.existByUserId(appointment.getPatientUserId())
-                && doctorService.existByUserId(appointment.getDoctorUserId())) {
-            appointmentCreated = appointmentRepository.save(appointment);
-            logger.info("Appointment created for patient with user_id: {}", appointmentCreated.getPatientUserId());
-        }
-        return appointmentCreated;
+        return appointmentRepository.save(appointment);
     }
-
-    public List<Appointment> getAllAppointments() {
+    public List<Appointment> getAll() {
         return appointmentRepository.findAll();
     }
-
-    public List<Appointment> getAppointmentsByPatientUserId(Long userId){
-        return appointmentRepository.findByPatientUserId(userId);
-    }
-
 
 
 }

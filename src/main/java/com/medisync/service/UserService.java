@@ -7,6 +7,7 @@ import com.medisync.enums.UserType;
 import com.medisync.repository.UserRepository;
 import com.medisync.util.JwtUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,7 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
-
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -27,16 +26,26 @@ public class UserService {
     @Autowired
     PatientService patientService;
 
-    @Transactional
     public User create(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        userRepository.save(user);
-        if (user.getRole().equals(UserType.DOCTOR)){
-            doctorService.create(new Doctor(user.getId()));
-        }else if (user.getRole().equals(UserType.PATIENT)) {
-            patientService.create(new Patient(user.getId()));
+        User userCreated = userRepository.save(user);
+        if (userCreated.getRole().equals(UserType.DOCTOR)){
+            doctorService.create(Doctor.builder().userId(user.getId()).build());
+        }else if (userCreated.getRole().equals(UserType.PATIENT)) {
+            patientService.create(Patient.builder().userId(user.getId()).build());
         }
-        return user;
+        return userCreated;
+    }
+
+    public User update(User user) {
+        Optional<User> optionalUser = userRepository.findById(user.getId());
+        optionalUser.ifPresent(currentUser -> copyProperties(user, currentUser));
+        return userRepository.save(optionalUser.get());
+    }
+
+    public void copyProperties(User source, User target){
+        if (source.getName() != null) target.setName(source.getName());
+        if (source.getEmail() != null) target.setEmail(source.getEmail());
     }
 
     public String authenticateAndGenerateToken(String email, String password){
@@ -47,15 +56,15 @@ public class UserService {
         return null;
     }
 
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
-    public User getUserByEmail(String email) {
+    public User getByEmail(String email) {
        return userRepository.findByEmail(email);
     }
 
-    public User getUserByIdentityNumber(String identityNumber) {
+    public User getByIdentityNumber(String identityNumber) {
         return userRepository.findByIdentityNumber(identityNumber);
     }
 }
