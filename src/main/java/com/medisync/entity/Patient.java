@@ -1,6 +1,5 @@
 package com.medisync.entity;
 
-import com.medisync.dto.response.PatientDto;
 import com.medisync.enums.BloodType;
 import jakarta.persistence.*;
 import lombok.*;

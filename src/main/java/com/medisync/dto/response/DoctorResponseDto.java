@@ -11,12 +11,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoctorDto {
+public class DoctorResponseDto {
     Long id;
     private Long userId;
     private MedicalSpecialization specialization;
-    public static DoctorDto fromDoctor(Doctor doctor){
-        DoctorDto dto = new DoctorDto(doctor.getId(), doctor.getUserId(), doctor.getSpecialization());
+    public static DoctorResponseDto fromDoctor(Doctor doctor){
+        DoctorResponseDto dto = new DoctorResponseDto(doctor.getId(), doctor.getUserId(), doctor.getSpecialization());
         return dto;
     }
 }

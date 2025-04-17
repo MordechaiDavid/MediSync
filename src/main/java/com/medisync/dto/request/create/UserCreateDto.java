@@ -1,4 +1,4 @@
-package com.medisync.dto.request;
+package com.medisync.dto.request.create;
 
 import com.medisync.enums.UserType;
 import lombok.*;

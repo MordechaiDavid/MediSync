@@ -1,7 +1,7 @@
 package com.medisync.entity;
 
-import com.medisync.dto.request.UserCreateDto;
-import com.medisync.dto.request.UserUpdateDto;
+import com.medisync.dto.request.create.UserCreateDto;
+import com.medisync.dto.request.update.UserUpdateDto;
 import com.medisync.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;

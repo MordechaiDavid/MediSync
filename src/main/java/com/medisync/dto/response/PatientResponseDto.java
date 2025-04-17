@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PatientDto {
+public class PatientResponseDto {
     private Long id;
     private Long userId;
     private BloodType bloodType;
 
-    public static PatientDto fromPatient(Patient patient){
-        PatientDto dto = new PatientDto(patient.getId(), patient.getUserId(), patient.getBloodType());
+    public static PatientResponseDto fromPatient(Patient patient){
+        PatientResponseDto dto = new PatientResponseDto(patient.getId(), patient.getUserId(), patient.getBloodType());
         return dto;
     }
 }

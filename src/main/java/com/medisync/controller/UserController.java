@@ -1,7 +1,7 @@
 package com.medisync.controller;
 
-import com.medisync.dto.request.UserCreateDto;
-import com.medisync.dto.request.UserUpdateDto;
+import com.medisync.dto.request.create.UserCreateDto;
+import com.medisync.dto.request.update.UserUpdateDto;
 import com.medisync.dto.response.UserResponseDto;
 import com.medisync.entity.User;
 import com.medisync.service.UserService;

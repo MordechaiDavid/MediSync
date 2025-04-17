@@ -1,6 +1,5 @@
-package com.medisync.dto.request;
+package com.medisync.dto.request.create;
 
-import com.medisync.entity.Appointment;
 import com.medisync.enums.AppointmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentRequestDto {
+public class AppointmentCreateDto {
     private Long patientId;
     private Long doctorId;
     private LocalDateTime appointmentDate;

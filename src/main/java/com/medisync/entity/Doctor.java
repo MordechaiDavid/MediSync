@@ -1,6 +1,5 @@
 package com.medisync.entity;
 
-import com.medisync.dto.response.DoctorDto;
 import com.medisync.enums.MedicalSpecialization;
 import jakarta.persistence.*;
 import lombok.*;

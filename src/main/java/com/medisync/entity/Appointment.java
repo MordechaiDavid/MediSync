@@ -1,7 +1,7 @@
 package com.medisync.entity;
 
-import com.medisync.dto.request.AppointmentRequestDto;
-import com.medisync.dto.response.AppointmentResponseDto;
+import com.medisync.dto.request.create.AppointmentCreateDto;
+import com.medisync.dto.request.update.AppointmentUpdateDto;
 import com.medisync.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,8 +31,19 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
 
-    public static Appointment fromAppointmentDto(AppointmentRequestDto dto){
+    public static Appointment fromAppointmentDto(AppointmentCreateDto dto){
         Appointment appointment =  Appointment.builder()
+                .patientId(dto.getPatientId())
+                .doctorId(dto.getDoctorId())
+                .appointmentDate(dto.getAppointmentDate())
+                .status(dto.getStatus())
+                .build();
+        return appointment;
+    }
+
+    public static Appointment fromAppointmentDto(AppointmentUpdateDto dto){
+        Appointment appointment = Appointment.builder()
+                .id(dto.getId())
                 .patientId(dto.getPatientId())
                 .doctorId(dto.getDoctorId())
                 .appointmentDate(dto.getAppointmentDate())
