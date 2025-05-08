@@ -29,10 +29,10 @@ public class User {
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
-    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
+
     @Enumerated(EnumType.STRING)
     private UserType role;
 

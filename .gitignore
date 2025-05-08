@@ -1,4 +1,7 @@
-HELP.md
+
+.env
+src/main/resources/application.yml
+HELP.mdbrew install git-filter-repo
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

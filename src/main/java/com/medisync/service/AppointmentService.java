@@ -9,31 +9,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AppointmentService {
+
     @Autowired
     private AppointmentRepository appointmentRepository;
+
     public Appointment create(Appointment appointment) {
         return appointmentRepository.save(appointment);
     }
+
     public Appointment update(Appointment appointment) {
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appointment.getId());
         appointmentOptional.ifPresent(currentAppointment -> copyProperties(appointment, currentAppointment));
         return appointmentRepository.save(appointmentOptional.get());
     }
+
     public List<Appointment> getAll() {
         return appointmentRepository.findAll();
     }
 
-    public List<Appointment> findNextAvailableAppointmentForDoctor(Long doctorId){
-        return appointmentRepository.findAvailableUpcomingAppointmentsByDoctorId(
+    public List<Appointment> getNextAvailableForDoctor(Long doctorId){
+        return appointmentRepository.findAvailableByDoctorId(
                 doctorId, AppointmentStatus.AVAILABLE, LocalDateTime.now()
         );
+    }
+
+    public List<Appointment> getByPatientId(Long patientId){
+        return appointmentRepository.findByPatientId(patientId);
     }
 
     public void copyProperties(Appointment source, Appointment target){

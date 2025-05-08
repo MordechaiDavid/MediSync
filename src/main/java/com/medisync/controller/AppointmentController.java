@@ -41,8 +41,15 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctor/{doctorId}/all-availables")
-    public ResponseEntity<List<AppointmentResponseDto>> findNextAvailableAppointmentForDoctor(@PathVariable Long doctorId){
-        List<Appointment> appointments = appointmentService.findNextAvailableAppointmentForDoctor(doctorId);
+    public ResponseEntity<List<AppointmentResponseDto>> getNextAvailablesForDoctor(@PathVariable Long doctorId){
+        List<Appointment> appointments = appointmentService.getNextAvailableForDoctor(doctorId);
+        List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/patient/{patientId}/get-appointments")
+    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentsByPatient(@PathVariable Long patientId){
+        List<Appointment> appointments = appointmentService.getByPatientId(patientId);
         List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
         return ResponseEntity.ok(dtos);
     }

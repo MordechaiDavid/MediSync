@@ -16,6 +16,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
     @PostMapping("/create")
     public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateDto dto) {
         User userCreated = userService.create(User.fromUserDto(dto));

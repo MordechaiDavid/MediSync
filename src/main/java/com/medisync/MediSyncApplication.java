@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MediSyncApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(MediSyncApplication.class, args);
     }
 
