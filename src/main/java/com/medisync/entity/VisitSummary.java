@@ -1,8 +1,6 @@
 package com.medisync.entity;
 
-import com.medisync.dto.request.create.UserCreateDto;
 import com.medisync.dto.request.create.VisitSummaryCreateDto;
-import com.medisync.dto.response.VisitSummaryResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,7 +22,7 @@ public class VisitSummary {
 
     private Long patientId;
 
-    private String documentUrl;
+    private String fileName;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -13,5 +13,4 @@ import java.time.LocalDateTime;
 public class VisitSummaryCreateDto {
     private Long doctorId;
     private Long patientId;
-    private MultipartFile document;
 }
