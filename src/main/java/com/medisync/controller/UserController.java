@@ -44,10 +44,6 @@ public class UserController {
         return ResponseEntity.ok(dtos);
     }
 
-    @GetMapping("/get-by-email")
-    public ResponseEntity<UserResponseDto> getByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(UserResponseDto.fromUser(userService.getByEmail(email)));
-    }
 
 
 }

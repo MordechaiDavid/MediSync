@@ -5,7 +5,10 @@ import com.medisync.dto.request.update.UserUpdateDto;
 import com.medisync.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -13,20 +16,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(name = "identity_number", nullable = false, unique = true)
     private String identityNumber;
 
-    @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
     private String email;
@@ -35,6 +34,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserType role;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 
     public static User fromUserDto(UserCreateDto dto){

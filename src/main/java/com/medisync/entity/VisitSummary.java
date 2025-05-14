@@ -25,7 +25,6 @@ public class VisitSummary {
     private String fileName;
 
     @CreationTimestamp
-    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     public static VisitSummary fromVisitSummaryDto(VisitSummaryCreateDto dto){

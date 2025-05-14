@@ -3,6 +3,9 @@ package com.medisync.entity;
 import com.medisync.enums.BloodType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,5 +23,8 @@ public class Patient {
 
     @Enumerated(EnumType.STRING)
     private BloodType bloodType;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
 
