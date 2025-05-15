@@ -43,6 +43,11 @@ public class UserService {
         return userRepository.save(optionalUser.get());
     }
 
+    public Optional<User> getUserById(Long id){
+        return userRepository.findById(id);
+    }
+
+
     public void copyProperties(User source, User target){
         if (source.getName() != null) target.setName(source.getName());
         if (source.getEmail() != null) target.setEmail(source.getEmail());

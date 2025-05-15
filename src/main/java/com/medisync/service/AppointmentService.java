@@ -43,6 +43,10 @@ public class AppointmentService {
         return appointmentRepository.findByPatientId(patientId);
     }
 
+    public String f(){
+        return "some";
+    }
+
     public void copyProperties(Appointment source, Appointment target){
         if (source.getStatus() != null) target.setStatus(source.getStatus());
         if (source.getDoctorId() != null) target.setDoctorId(source.getDoctorId());
