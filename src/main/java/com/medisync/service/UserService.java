@@ -31,8 +31,6 @@ public class UserService {
         User userCreated = userRepository.save(user);
         if (userCreated.getRole().equals(UserType.DOCTOR)){
             doctorService.create(Doctor.builder().userId(user.getId()).build());
-        }else if (userCreated.getRole().equals(UserType.PATIENT)) {
-            patientService.create(Patient.builder().userId(user.getId()).build());
         }
         return userCreated;
     }

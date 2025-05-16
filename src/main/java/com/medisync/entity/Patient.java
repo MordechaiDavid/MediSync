@@ -1,10 +1,14 @@
 package com.medisync.entity;
 
+import com.fasterxml.jackson.databind.annotation.EnumNaming;
 import com.medisync.enums.BloodType;
+import com.medisync.enums.Gender;
+import com.medisync.enums.InsuranceInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,10 +23,24 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false)
+    private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    private BloodType bloodType;
+    private Gender gender;
+
+    // TODO Add address field
+
+    private String phone;
+
+    @Enumerated(EnumType.STRING)
+    private InsuranceInfo insuranceInfo;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
