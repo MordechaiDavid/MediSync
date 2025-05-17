@@ -144,7 +144,7 @@ public class PatientControllerTest {
 
     @Test
     @Order(4)
-    public void updateEmployeeTest() throws Exception{
+    public void updatePatientTest() throws Exception{
         patient.setFirstName("Max");
         patient.setEmail("max@gmail.com");
         given(patientService.update(patient, patient.getId())).willReturn(patient);
@@ -160,7 +160,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void deleteEmployeeTest() throws Exception{
+    public void deletePatientTest() throws Exception{
 
         willDoNothing().given(patientService).delete(patient.getId());
 

@@ -37,7 +37,7 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    // TODO Add address, password and email field
+    // TODO Add address field
     @Column(nullable = false)
     private String phone;
 

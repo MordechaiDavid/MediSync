@@ -29,9 +29,6 @@ public class UserService {
     public User create(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         User userCreated = userRepository.save(user);
-        if (userCreated.getRole().equals(UserType.DOCTOR)){
-            doctorService.create(Doctor.builder().userId(user.getId()).build());
-        }
         return userCreated;
     }
 
