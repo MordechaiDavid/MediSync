@@ -2,16 +2,16 @@ package com.medisync.dto.response;
 
 import com.medisync.entity.Appointment;
 import com.medisync.enums.AppointmentStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Data
 public class AppointmentResponseDto {
     private Long id;
     private Long patientId;
@@ -20,12 +20,13 @@ public class AppointmentResponseDto {
     private AppointmentStatus status;
 
     public static AppointmentResponseDto fromAppointment(Appointment appointment) {
-        AppointmentResponseDto dto = new AppointmentResponseDto(
-                appointment.getId(),
-                appointment.getPatientId(), appointment.getDoctorId(),
-                appointment.getAppointmentDate(),
-                appointment.getStatus());
-        return dto;
+        return AppointmentResponseDto.builder()
+                .appointmentDate(appointment.getAppointmentDate())
+                .id(appointment.getId())
+                .doctorId(appointment.getDoctorId())
+                .patientId(appointment.getPatientId())
+                .status(appointment.getStatus())
+                .build();
     }
 
 }

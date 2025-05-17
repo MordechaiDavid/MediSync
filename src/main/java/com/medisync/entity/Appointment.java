@@ -32,24 +32,22 @@ public class Appointment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public static Appointment fromAppointmentDto(AppointmentCreateDto dto){
-        Appointment appointment =  Appointment.builder()
+    public static Appointment fromDto(AppointmentCreateDto dto) {
+        return Appointment.builder()
                 .patientId(dto.getPatientId())
                 .doctorId(dto.getDoctorId())
                 .appointmentDate(dto.getAppointmentDate())
                 .status(dto.getStatus())
                 .build();
-        return appointment;
     }
 
-    public static Appointment fromAppointmentDto(AppointmentUpdateDto dto){
-        Appointment appointment = Appointment.builder()
+    public static Appointment fromAppointmentDto(AppointmentUpdateDto dto) {
+        return Appointment.builder()
                 .id(dto.getId())
                 .patientId(dto.getPatientId())
                 .doctorId(dto.getDoctorId())
                 .appointmentDate(dto.getAppointmentDate())
                 .status(dto.getStatus())
                 .build();
-        return appointment;
     }
 }

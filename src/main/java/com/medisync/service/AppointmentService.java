@@ -1,57 +1,61 @@
 package com.medisync.service;
 
 import com.medisync.entity.Appointment;
+import com.medisync.entity.Appointment;
 import com.medisync.entity.User;
 import com.medisync.enums.AppointmentStatus;
 import com.medisync.repository.AppointmentRepository;
+import com.medisync.repository.AppointmentRepository;
 import com.medisync.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class AppointmentService {
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    private AppointmentRepository repository;
 
+    // FIXME right now we can create unstop appointment with same details (what is the diff key, id generate auto)
+    // TODO check if try to create appointment that already exist
     public Appointment create(Appointment appointment) {
-        return appointmentRepository.save(appointment);
-    }
-
-    public Appointment update(Appointment appointment) {
-        Optional<Appointment> appointmentOptional = appointmentRepository.findById(appointment.getId());
-        appointmentOptional.ifPresent(currentAppointment -> copyProperties(appointment, currentAppointment));
-        return appointmentRepository.save(appointmentOptional.get());
+        Appointment savedAppointment = repository.save(appointment);
+        log.info("create new appointment with id " + savedAppointment.getId());
+        return savedAppointment;
     }
 
     public List<Appointment> getAll() {
-        return appointmentRepository.findAll();
+        return repository.findAll();
     }
 
-    public List<Appointment> getNextAvailableForDoctor(Long doctorId){
-        return appointmentRepository.findAvailableByDoctorId(
-                doctorId, AppointmentStatus.AVAILABLE, LocalDateTime.now()
-        );
+    public Optional<Appointment> getById(Long id) {
+        return repository.findById(id);
     }
 
-    public List<Appointment> getByPatientId(Long patientId){
-        return appointmentRepository.findByPatientId(patientId);
+    public Appointment update(Appointment appointment, Long id) {
+        Appointment existingAppointment = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException()); // FIXME what do we do with the exception?
+        existingAppointment.setPatientId(appointment.getPatientId());
+        existingAppointment.setStatus(appointment.getStatus());
+        existingAppointment.setDoctorId(appointment.getDoctorId());
+        existingAppointment.setAppointmentDate(appointment.getAppointmentDate());
+        Appointment updatedAppointment = repository.save(existingAppointment);
+        log.info("updated appointment with id: " + id);
+        return updatedAppointment;
     }
 
-    public String f(){
-        return "some";
-    }
-
-    public void copyProperties(Appointment source, Appointment target){
-        if (source.getStatus() != null) target.setStatus(source.getStatus());
-        if (source.getDoctorId() != null) target.setDoctorId(source.getDoctorId());
-        if (source.getPatientId() != null) target.setPatientId(source.getPatientId());
-        if (source.getAppointmentDate() != null) target.setAppointmentDate(source.getAppointmentDate());
+    public void delete(Long id) {
+        repository.deleteById(id);
+        log.info("appointment with id " + id + " deleted");
     }
 
 

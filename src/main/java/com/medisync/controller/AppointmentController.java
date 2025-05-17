@@ -1,59 +1,77 @@
 package com.medisync.controller;
 
 import com.medisync.dto.request.create.AppointmentCreateDto;
+import com.medisync.dto.request.create.AppointmentCreateDto;
 import com.medisync.dto.request.update.AppointmentUpdateDto;
 import com.medisync.dto.request.update.UserUpdateDto;
 import com.medisync.dto.response.AppointmentResponseDto;
+import com.medisync.dto.response.AppointmentResponseDto;
 import com.medisync.dto.response.UserResponseDto;
+import com.medisync.entity.Appointment;
 import com.medisync.entity.Appointment;
 import com.medisync.entity.User;
 import com.medisync.service.AppointmentService;
+import com.medisync.service.AppointmentService;
 import com.medisync.util.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentController {
+
     @Autowired
-    private AppointmentService appointmentService;
+    private AppointmentService service;
 
-    @PostMapping("/create")
-    public ResponseEntity<AppointmentResponseDto> create(@RequestBody AppointmentCreateDto requestDto) {
-        Appointment appointment = appointmentService.create(Appointment.fromAppointmentDto(requestDto));
-        AppointmentResponseDto responseDto= AppointmentResponseDto.fromAppointment(appointment);
-        return ResponseEntity.ok(responseDto);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<AppointmentResponseDto> update(@RequestBody AppointmentUpdateDto dto){
-        Appointment appointmentUpdated = appointmentService.update(Appointment.fromAppointmentDto(dto));
-        return ResponseEntity.ok(AppointmentResponseDto.fromAppointment(appointmentUpdated));
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public AppointmentResponseDto create(@RequestBody AppointmentCreateDto dto) {
+        Appointment appointment = service.create(Appointment.fromDto(dto));
+        return AppointmentResponseDto.fromAppointment(appointment);
     }
 
     @GetMapping
-    public ResponseEntity<List<AppointmentResponseDto>> getAll() {
-        List<Appointment> appointments = appointmentService.getAll();
-        List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
-        return ResponseEntity.ok(dtos);
+    public List<AppointmentResponseDto> getAll() {
+        List<Appointment> appointments = service.getAll();
+        return appointments.stream().map(AppointmentResponseDto::fromAppointment).collect(Collectors.toList());
     }
 
-    @GetMapping("/doctor/{doctorId}/all-availables")
-    public ResponseEntity<List<AppointmentResponseDto>> getNextAvailablesForDoctor(@PathVariable Long doctorId){
-        List<Appointment> appointments = appointmentService.getNextAvailableForDoctor(doctorId);
-        List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
-        return ResponseEntity.ok(dtos);
+    @GetMapping("{id}")
+    public ResponseEntity<Optional<Appointment>> getById(@PathVariable Long id) {
+        Optional<Appointment> optionalAppointment = service.getById(id);
+        return new ResponseEntity<Optional<Appointment>>(optionalAppointment, HttpStatus.OK);
     }
 
-    @GetMapping("/patient/{patientId}/get-appointments")
-    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentsByPatient(@PathVariable Long patientId){
-        List<Appointment> appointments = appointmentService.getByPatientId(patientId);
-        List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
-        return ResponseEntity.ok(dtos);
+    @PutMapping("{id}")
+    public ResponseEntity<Appointment> update(@PathVariable Long id, @RequestBody Appointment appointment) {
+        return new ResponseEntity<Appointment>(service.update(appointment, id), HttpStatus.OK);
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        service.delete(id);
+        return new ResponseEntity<String>("Appointment deleted successfully with id: " + id, HttpStatus.OK);
+    }
+
+//    @GetMapping("/appointment/{appointmentId}/all-availables")
+//    public ResponseEntity<List<AppointmentResponseDto>> getNextAvailablesForAppointment(@PathVariable Long appointmentId){
+//        List<Appointment> appointments = appointmentService.getNextAvailableForAppointment(appointmentId);
+//        List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
+//        return ResponseEntity.ok(dtos);
+//    }
+
+//    @GetMapping("/patient/{patientId}/get-appointments")
+//    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentsByPatient(@PathVariable Long patientId){
+//        List<Appointment> appointments = appointmentService.getByPatientId(patientId);
+//        List<AppointmentResponseDto> dtos = EntityMapper.convertList(appointments, AppointmentResponseDto::fromAppointment);
+//        return ResponseEntity.ok(dtos);
+//    }
 
 
 }
