@@ -69,4 +69,28 @@ public class PatientControllerTest {
                 .andExpect(jsonPath("$.phone",
                         is(patient.getPhone())));
     }
+
+    @Test
+    @Order(2)
+    public void getAllPatientTest() throws Exception {
+        List<Patient> patients = new ArrayList<>();
+        patients.add(patient);
+        patients.add(Patient.builder().id(2L).lastName("Azran").firstName("Ohad").gender(Gender.MALE)
+                .phone("0544444444").insuranceInfo(InsuranceInfo.MACABI).dateOfBirth(LocalDate.of(1990, 4, 20))
+                .build());
+        given(patientService.getAll()).willReturn(patients);
+
+        ResultActions response = mockMvc.perform(get("/api/patients"));
+        response.andExpect(status().isOk()).
+                andExpect(jsonPath("$.size()",
+                        is(patients.size())))
+                .andDo(print());
+
+
+    }
+
+
+
+
+
 }
