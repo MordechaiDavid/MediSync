@@ -1,6 +1,7 @@
 package com.medisync.entity;
 
 import com.fasterxml.jackson.databind.annotation.EnumNaming;
+import com.medisync.dto.request.create.PatientCreateDto;
 import com.medisync.enums.BloodType;
 import com.medisync.enums.Gender;
 import com.medisync.enums.InsuranceInfo;
@@ -36,14 +37,31 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    // TODO Add address field
-
+    // TODO Add address, password and email field
+    @Column(nullable = false)
     private String phone;
+
+    private String email;
+
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private InsuranceInfo insuranceInfo;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public static Patient fromDto(PatientCreateDto dto){
+        return Patient.builder()
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .gender(dto.getGender())
+                .insuranceInfo(dto.getInsuranceInfo())
+                .phone(dto.getPhone())
+                .dateOfBirth(dto.getDateOfBirth())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .build();
+    }
 }
 
