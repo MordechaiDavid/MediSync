@@ -13,8 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -51,7 +49,7 @@ public class Patient {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public static Patient fromDto(PatientCreateDto dto){
+    public static Patient fromDto(PatientCreateDto dto) {
         return Patient.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
